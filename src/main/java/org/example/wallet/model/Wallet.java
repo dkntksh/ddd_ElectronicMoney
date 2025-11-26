@@ -44,4 +44,17 @@ public class Wallet {
         // ChargeAmount が保証するので追加チェックは不要
         this.balance += amount.getAmount();
     }
+
+    /**
+     * 支払う
+     * @param amount 支払金額
+     */
+    public void pay(PayAmount amount) {
+        if (amount.getAmount() > this.balance) {
+            throw new InsufficientBalanceException(
+                    "残高不足: 支払額 " + amount.getAmount() + " が残高 " + this.balance + " を超えています"
+            );
+        }
+        this.balance -= amount.getAmount();
+    }
 }
