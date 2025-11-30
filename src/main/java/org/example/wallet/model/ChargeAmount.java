@@ -10,7 +10,7 @@ public class ChargeAmount {
     /**
      * チャージ量
      */
-    final private int amount;
+    private final Money amount;
 
     /**
      * コンストラクタ
@@ -22,10 +22,10 @@ public class ChargeAmount {
         if(amount <= 0 || amount > 10000) {
             throw new ChargeAmountException("チャージ金額は1円以上10,000円以下でなければなりません: " + amount);
         }
-        this.amount = amount;
+        this.amount = new Money(amount);
     }
 
-    public int getAmount(){
+    public Money getMoney(){
         return this.amount;
     }
 
