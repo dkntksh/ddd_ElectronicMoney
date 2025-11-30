@@ -14,14 +14,14 @@ public class Wallet {
     /**
      * 残高
      */
-    private int balance;
+    private long balanceAmount; // 内部では long で管理（0円可能）
 
     /**
      * コンストラクタ
      */
     public Wallet() {
         this.id = UUID.randomUUID();
-        this.balance = 0;
+        this.balanceAmount = 0; // 0円スタート可能
     }
 
     public UUID getId() {
@@ -32,8 +32,8 @@ public class Wallet {
      * 残高照会
      * @return 残高
      */
-    public int getBalance() {
-        return balance;
+    public Money getBalance() {
+        return balanceAmount == 0 ? null : new Money(balanceAmount);
     }
 
     /**
@@ -41,8 +41,7 @@ public class Wallet {
      * @param amount チャージ金額
      */
     public void charge(ChargeAmount amount) {
-        // ChargeAmount が保証するので追加チェックは不要
-        this.balance += amount.getAmount();
+        this.balanceAmount += amount.getMoney().getAmount(); // Money の amount を加算
     }
 
     /**
@@ -50,11 +49,10 @@ public class Wallet {
      * @param amount 支払金額
      */
     public void pay(PayAmount amount) {
-        if (amount.getAmount() > this.balance) {
-            throw new InsufficientBalanceException(
-                    "残高不足: 支払額 " + amount.getAmount() + " が残高 " + this.balance + " を超えています"
-            );
+        if (amount.getMoney().getAmount() > balanceAmount) {
+            throw new IllegalArgumentException("残高不足です");
         }
-        this.balance -= amount.getAmount();
+        this.balanceAmount -= amount.getMoney().getAmount();
     }
+
 }

@@ -1,17 +1,22 @@
 package org.example.wallet.model;
 
+import java.util.Objects;
+
 /**
  * 支払い金額
  */
 public class PayAmount {
 
-    private final int amount;
+    private final Money amount;
 
-    public PayAmount(int amount) {
-        this.amount = amount;
+    public PayAmount(long amount) {
+        if (amount <= 0) {
+            throw new InsufficientBalanceException("支払額は正の数である必要があります");
+        }
+        this.amount = new Money(amount);
     }
 
-    public int getAmount() {
+    public Money getMoney() {
         return amount;
     }
 
@@ -25,7 +30,7 @@ public class PayAmount {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(amount);
+        return Objects.hashCode(amount);
     }
 
     @Override
